@@ -24,9 +24,10 @@ you can A/B and keep it or discard it.
 
 ## The editor
 
-Two tabs share the same zoom/pan, undo/redo (up to 50 steps), and transport.
-Press **Space** to play/stop; the waveform tab plays from the selection (or the
-whole region), the pitch tab from a click-set play head.
+Three tabs — **Waveform**, **Pitch**, and **Spectral** — share the same
+zoom/pan, undo/redo (up to 50 steps), and transport. Press **Space** to
+play/stop; the waveform tab plays from the selection (or the whole region), the
+pitch tab from a click-set play head.
 
 ### Waveform tab
 
@@ -41,8 +42,14 @@ whole region), the pitch tab from a click-set play head.
   - **Pitch bend** in semitones.
 - Per-channel lanes with optional **Link** (mirror edits across channels),
   zoom/pan (wheel, Ctrl/Cmd+wheel), and **Ctrl/Cmd+A** to select all.
+- **Spectro** (toggle with **G**) — a per-channel spectrogram strip under each
+  lane, locked to the same time axis (log-frequency, Nyquist at top). Clicks
+  and pops show as bright vertical broadband streaks, so they're far easier to
+  find than in the time-domain trace. Click/drag the strip to mark a range,
+  then switch to **Heal** to repair it; drag the strip's top edge to resize it.
+  It re-renders after each edit and follows zoom/pan.
 
-### Pitch tab (Melodyne-style)
+### Pitch tab
 
 - Detects the **monophonic** pitch contour, segments it into notes, and lays
   them on a piano roll with a vertical keyboard.
@@ -51,8 +58,29 @@ whole region), the pitch tab from a click-set play head.
 - **Correct All** snaps every note to the nearest semitone.
 - **Reset & Re-analyze** reverts to the original audio and re-detects.
 
+### Spectral tab
+
+A drawable, invertible log-frequency spectrogram per channel — paint directly
+on the spectrum to fix problems that are invisible in the waveform. Unlike the
+waveform tab's display-only **Spectro** strip, this keeps a full STFT and
+resynthesizes (weighted overlap-add) on each stroke, so edits round-trip back
+into the audio. The brush is **time-pressed** like a Photoshop brush: dwelling
+or overlapping passes deepen the effect, quick swipes barely touch it.
+
+- **Attenuate** (**A**) — paint toward a noise floor to cut unwanted content
+  (hum, bleed, broadband clicks).
+- **Restore** (**R**) — paint the mask back toward the original (un-erase).
+- **Heal** (**H**) — paint over a click/blemish to fill it from the surrounding
+  frames.
+- **Draw** (**D**) — synthesize fresh tones into empty spectrum.
+- **Brush** size (S/M/L/XL) and **Flow** (Low → Instant) set how fast the brush
+  bites; **Heat**/**Rainbow** toggle the color scheme.
+
 ### Limitations
 
+- The whole region is loaded into the editor, so length is bounded by memory
+  and render time — very long clips will be slow. Use a time-selection for fine
+  click repair.
 - The edited clip is **unwarped sounding audio**; the original's warp markers
   and fades are not carried over.
 - The render captures everything sounding on that track in the range, so the
@@ -63,3 +91,18 @@ whole region), the pitch tab from a click-set play head.
 ## Get Started
 
 Learn about building extensions: https://ableton.github.io/extensions-sdk/
+
+## Setup
+
+The path to Ableton Live's Extension Host module is stored in `.env` as
+`EXTENSION_HOST_PATH`. The generator filled this in for you; edit it if your
+install moves.
+
+## Scripts
+
+```sh
+npm start                  # build + run in Live's Extension Host
+npm run build              # production bundle of src/extension.ts
+npm run build:dev          # dev bundle (sourcemaps, not minified)
+npm run package            # build for production + create a .ablx archive
+```
