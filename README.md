@@ -4,7 +4,7 @@ An Ableton Live extension that opens an audio clip in a **sample-level waveform
 and pitch editor** — a ProTools/Melodyne-style quality-of-life feature for
 spot-fixing pops, clicks, clipping, and tuning without leaving Live.
 
-<img width="1552" height="1040" alt="image" src="https://github.com/user-attachments/assets/2b23417d-de0a-4532-aaf9-8964e5285411" />
+<img width="1552" height="1040" alt="image" src="https://github.com/user-attachments/assets/ae3381ed-b771-4a30-af49-ac5a67a0237b" />
 
 
 ## How it works
